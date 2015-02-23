@@ -28,7 +28,7 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\bin\$configuration$\*.*" target="lib\net40\" />
-    <file src="..\bin\$configuration$\net45\*.*" target="lib\net45\" />
+    <file src="..\bin\$configuration$\*.Persistence.EntityFramework.*" target="lib\net40\" />
+    <file src="..\bin\$configuration$\net45\*.Persistence.EntityFramework.*" target="lib\net45\" />
   </files>
 </package>
