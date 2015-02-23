@@ -6,3 +6,6 @@ for EntityFramework (*See the ConsoleTest and UnitTest projects for examples of 
 ## Key Features
 
 * The Repository.Update takes care of updating collection properties generically.
+
+## CI build status
+[![Build Status](https://www.myget.org/BuildSource/Badge/persistence-entityframework?identifier=48b1c161-1c82-4483-97e2-6cbb036d6cb4)](https://www.myget.org/)
