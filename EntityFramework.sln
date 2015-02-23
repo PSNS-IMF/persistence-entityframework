@@ -13,8 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFramework.UnitTests",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F5DD413C-4C5E-422E-9B6C-0D4440B08DC7}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		45Build.proj = 45Build.proj
-		TFSBuild.proj = TFSBuild.proj
+		build.bat = build.bat
+		Build.proj = Build.proj
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTest", "src\ConsoleTest\ConsoleTest.csproj", "{BE4BA6E5-DA75-4D80-AF21-4813A6C84790}"
