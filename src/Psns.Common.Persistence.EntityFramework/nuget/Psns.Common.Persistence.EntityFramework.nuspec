@@ -8,7 +8,8 @@
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>Contains a library that implements Psns.Common.Persistence.Definitions with Entity Framework</description>
     <projectUrl>https://github.com/PSNS-IMF/persistence-entityframework</projectUrl>
-    <licenseUrl>https://github.com/PSNS-IMF/persistence-entityframework/blob/master/LICENSE</licenseUrl>
+    <licenseUrl>https://github.com/PSNS-IMF/persistence-entityframework/blob/master/LICENSE.md</licenseUrl>
+    <tags>PSNS EntityFramework ORM EF OR/M Database Data</tags>
     <releaseNotes>
       ## 1.0.0.3
       ### Features
@@ -22,7 +23,6 @@
       ### Features
       * Initial Release
     </releaseNotes>
-    <copyright>Copyright 2015</copyright>
     <version>$version$</version>
     <dependencies>
       <dependency id="Psns.Common.Persistence.Definitions" version="1.0.3" />

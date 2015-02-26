@@ -8,4 +8,4 @@ for EntityFramework (*See the ConsoleTest and UnitTest projects for examples of 
 * The Repository.Update takes care of updating collection properties generically.
 
 ## CI build status
-[![Build Status](https://www.myget.org/BuildSource/Badge/persistence-entityframework?identifier=48b1c161-1c82-4483-97e2-6cbb036d6cb4)](https://www.myget.org/)
+[![Build Status](https://www.myget.org/BuildSource/Hook/psns-common?identifier=2a5c23f6-96e6-4f14-b0c1-90208143b66d)](https://www.myget.org/)
