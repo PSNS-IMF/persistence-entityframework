@@ -13,7 +13,7 @@ namespace Psns.Common.Persistence.EntityFramework
     public interface IContext : IDisposable
     {
         /// <summary>
-        /// Definies a method to set the modified state of an Entry
+        /// Defines a method to set the modified state of an Entry
         /// </summary>
         /// <param name="entity">The entity to modify</param>
         /// <param name="updated">The entity containing updated values</param>
@@ -25,6 +25,17 @@ namespace Psns.Common.Persistence.EntityFramework
     /// </summary>
     public abstract class Context : DbContext, IContext
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Context() : base() { }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="nameOrConnectionString">The context's name or a complete connection string</param>
+        public Context(string nameOrConnectionString) : base(nameOrConnectionString) { }
+
         /// <summary>
         /// Sets Entry.State to EntityState.Modified
         /// </summary>

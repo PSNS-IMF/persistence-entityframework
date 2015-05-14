@@ -11,6 +11,10 @@
     <licenseUrl>https://github.com/PSNS-IMF/persistence-entityframework/blob/master/LICENSE.md</licenseUrl>
     <tags>PSNS EntityFramework ORM EF OR/M Database Data</tags>
     <releaseNotes>
+      ## 1.0.0.4
+      ### Features
+      * Added constructor to Context that accepts a context name or connection string to pass to DbContext.
+
       ## 1.0.0.3
       ### Features
       * Add .NET 4.5 version.
@@ -26,7 +30,7 @@
     <version>$version$</version>
     <dependencies>
       <dependency id="Psns.Common.Persistence.Definitions" version="1.0.3" />
-      <dependency id="EntityFramework" version="6.1.2" />
+      <dependency id="EntityFramework" version="6.1.3" />
     </dependencies>
   </metadata>
   <files>
