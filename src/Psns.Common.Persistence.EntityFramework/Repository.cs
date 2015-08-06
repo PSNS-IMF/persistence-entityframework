@@ -92,15 +92,19 @@ namespace Psns.Common.Persistence.EntityFramework
                     if(add == null || remove == null)
                         throw new InvalidOperationException(string.Format("{0} must implement both Add and Remove methods", property.Name));
 
-                    var additions = newCollection.OfType<IIdentifiable>()
-                        .Except(oldCollection.OfType<IIdentifiable>(), new IdentifiableComparer());
+                    var comparer = new IdentifiableComparer();
+                    var newIdentifiables = newCollection.OfType<IIdentifiable>();
+                    var oldIdentifiables = oldCollection.OfType<IIdentifiable>();
+
+                    var additions = newIdentifiables
+                        .Where(item => !oldIdentifiables.Contains(item, comparer)).ToList();
                     foreach(var newItem in additions)
                     {
                         add.Invoke(oldCollection, new object[] { newItem });
                     };
 
-                    var removals = oldCollection.OfType<IIdentifiable>()
-                        .Except(newCollection.OfType<IIdentifiable>(), new IdentifiableComparer()).ToArray();
+                    var removals = oldIdentifiables
+                        .Where(item => !newIdentifiables.Contains(item, comparer)).ToList();
                     foreach(var toDelete in removals)
                     {
                         remove.Invoke(oldCollection, new object[] { toDelete });
