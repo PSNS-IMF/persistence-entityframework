@@ -11,6 +11,10 @@
     <licenseUrl>https://github.com/PSNS-IMF/persistence-entityframework/blob/master/LICENSE.md</licenseUrl>
     <tags>PSNS EntityFramework ORM EF OR/M Database Data</tags>
     <releaseNotes>
+      ## 1.0.0.5
+      ### Features
+      * Fixed bug with Repository Update discarding collection items with duplicate Ids of 0 when multiple new records were added.
+      
       ## 1.0.0.4
       ### Features
       * Added constructor to Context that accepts a context name or connection string to pass to DbContext.
