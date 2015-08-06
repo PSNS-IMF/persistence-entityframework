@@ -18,6 +18,7 @@ namespace EntityFramework.UnitTests
     public class TestEntity : IIdentifiable
     {
         public int Id { get; set; }
+        public string Name { get; set; }
     }
 
     public class ModelContext : Context
@@ -34,6 +35,7 @@ namespace EntityFramework.UnitTests
         protected Mock<ModelContext> MockContext;
         protected Mock<DbSet<TestEntity>> MockTestEntitySet;
         protected Mock<DbSet<KeyedNonId>> MockKeyedNonIdSet;
+        protected Mock<DbSet<NonKeyed>> MockNonKeyedSet;
 
         public override void Arrange()
         {
@@ -328,6 +330,99 @@ namespace EntityFramework.UnitTests
 
             MockContext.Verify(c => c.SetModified(It.Is<object>(o => (o as KeyedNonId).Id == 1),
                 It.Is<object>(o => (o as KeyedNonId).Id == 0)), Times.Once());
+        }
+    }
+
+    [TestClass]
+    public class AndUpdatingWithEntitiesThatShareIds : WhenWorkingWithTheRepository
+    {
+        NonKeyed _old;
+        NonKeyed _updated;
+        Repository<NonKeyed> _repository;
+
+        public override void Arrange()
+        {
+            base.Arrange();
+
+            var data = new List<NonKeyed>
+            {
+                new NonKeyed { Id = 1, Name = "1" },
+                new NonKeyed { Id = 2, Name = "2" },
+            }.AsQueryable();
+
+            MockNonKeyedSet = new Mock<DbSet<NonKeyed>>();
+            MockNonKeyedSet.As<IQueryable<NonKeyed>>().Setup(m => m.Provider).Returns(data.Provider);
+            MockNonKeyedSet.As<IQueryable<NonKeyed>>().Setup(m => m.Expression).Returns(data.Expression);
+            MockNonKeyedSet.As<IQueryable<NonKeyed>>().Setup(m => m.ElementType).Returns(data.ElementType);
+            MockNonKeyedSet.As<IQueryable<NonKeyed>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
+            MockNonKeyedSet.Setup(s => s.Find(It.IsAny<object[]>())).Returns(() =>
+            {
+                _old = new NonKeyed
+                {
+                    Id = 1,
+                    Name = "updated",
+                    TestEntities = new List<TestEntity>
+                        {
+                            new TestEntity { Id = 2, Name = "2" },
+                            new TestEntity { Id = 3, Name = "3" },
+                            new TestEntity { Id = 1, Name = "1" }
+                        }
+                };
+
+                return _old;
+            });
+
+            MockContext = new Mock<ModelContext>();
+
+            MockContext.Setup(c => c.Set<NonKeyed>()).Returns(MockNonKeyedSet.Object);
+
+            _repository = new Repository<NonKeyed>(MockContext.Object);
+
+            RelationshipLoaderAdapter.LoadFunction = (DbContext context, object entity, string[] includes) => { return; };
+        }
+
+        public override void Act()
+        {
+            base.Act();
+
+            _updated = _repository.Update(new NonKeyed
+            {
+                Id = 1,
+                Name = "updated",
+                TestEntities = new List<TestEntity> 
+                { 
+                    new TestEntity { Id = 1, Name = "1" },
+                    new TestEntity { Id = 4, Name = "4" },
+                    new TestEntity { Id = 0, Name = "new 1" },
+                    new TestEntity { Id = 0, Name = "new 2" }
+                }
+            }, "TestEntities");
+        }
+
+        [TestMethod]
+        public void ThenAllNewTestEntitiesShouldBeCreated()
+        {
+
+            Assert.AreEqual("updated", _updated.Name);
+            Assert.AreEqual(4, _old.TestEntities.Count);
+            Assert.AreEqual(1, _old.TestEntities.ElementAt(0).Id);
+            Assert.AreEqual(4, _old.TestEntities.ElementAt(1).Id);
+            Assert.AreEqual(0, _old.TestEntities.ElementAt(2).Id);
+            Assert.AreEqual("new 1", _old.TestEntities.ElementAt(2).Name);
+            Assert.AreEqual(0, _old.TestEntities.ElementAt(3).Id);
+            Assert.AreEqual("new 2", _old.TestEntities.ElementAt(3).Name);
+
+            Assert.AreEqual(4, _updated.TestEntities.Count);
+            Assert.AreEqual(1, _updated.TestEntities.ElementAt(0).Id);
+            Assert.AreEqual(4, _updated.TestEntities.ElementAt(1).Id);
+            Assert.AreEqual(0, _updated.TestEntities.ElementAt(2).Id);
+            Assert.AreEqual("new 1", _updated.TestEntities.ElementAt(2).Name);
+            Assert.AreEqual(0, _updated.TestEntities.ElementAt(3).Id);
+            Assert.AreEqual("new 2", _updated.TestEntities.ElementAt(3).Name);
+
+            MockContext.Verify(c => c.SetModified(
+                It.Is<object>(o => (o as NonKeyed).Id == 1),
+                It.Is<object>(o => (o as NonKeyed).Id == 1)), Times.Once());
         }
     }
 
