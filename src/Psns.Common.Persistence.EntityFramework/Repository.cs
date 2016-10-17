@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Reflection;
+using System.Threading.Tasks;
 
 using System.Data.Entity;
 using System.ComponentModel.DataAnnotations;
@@ -42,9 +43,9 @@ namespace Psns.Common.Persistence.EntityFramework
         /// </summary>
         /// <param name="includes">Property names to be included</param>
         /// <returns>An IEnumerable of all of the entities</returns>
-        public virtual IEnumerable<T> All(params string[] includes)
+        public virtual IQueryable<T> All(params string[] includes)
         {
-            return _dbContext.Set<T>().IncludeMany(includes).AsNoTracking().ToList();
+            return _dbContext.Set<T>().IncludeMany(includes).AsNoTracking();
         }
 
         /// <summary>
@@ -141,12 +142,22 @@ namespace Psns.Common.Persistence.EntityFramework
         }
 
         /// <summary>
+        /// Find a single entity asynchronously
+        /// </summary>
+        /// <param name="keyValues">Key values to be used in the search</param>
+        /// <returns>The found entity or null</returns>
+        public async virtual Task<T> FindAsync(params object[] keyValues)
+        {
+            return await _dbContext.Set<T>().FindAsync(keyValues);
+        }
+
+        /// <summary>
         /// Find all entities that match the given predicate
         /// </summary>
         /// <param name="predicate">The predicate query</param>
         /// <param name="includes">The properties to be included in the results</param>
         /// <returns>The list of matching entites</returns>
-        public virtual IEnumerable<T> Find(Expression<Func<T, bool>> predicate, params string[] includes)
+        public virtual IQueryable<T> Find(Expression<Func<T, bool>> predicate, params string[] includes)
         {
             return _dbContext.Set<T>().IncludeMany(includes).Where(predicate).AsNoTracking();
         }
@@ -168,6 +179,15 @@ namespace Psns.Common.Persistence.EntityFramework
         public virtual int SaveChanges()
         {
             return _dbContext.SaveChanges();
+        }
+
+        /// <summary>
+        /// Calls DbContext.SaveChangesAsync
+        /// </summary>
+        /// <returns>The count of entities modified</returns>
+        public async virtual Task<int> SaveChangesAsync()
+        {
+            return await _dbContext.SaveChangesAsync();
         }
 
         #region IDisposable

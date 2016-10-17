@@ -11,10 +11,14 @@
     <licenseUrl>https://github.com/PSNS-IMF/persistence-entityframework/blob/master/LICENSE.md</licenseUrl>
     <tags>PSNS EntityFramework ORM EF OR/M Database Data</tags>
     <releaseNotes>
+      ## 1.0.6
+      ### Features
+      * Changed NETFramework to 4.5 in order to support async methods
+
       ## 1.0.0.5
       ### Features
       * Fixed bug with Repository Update discarding collection items with duplicate Ids of 0 when multiple new records were added.
-      
+
       ## 1.0.0.4
       ### Features
       * Added constructor to Context that accepts a context name or connection string to pass to DbContext.
@@ -33,7 +37,7 @@
     </releaseNotes>
     <version>$version$</version>
     <dependencies>
-      <dependency id="Psns.Common.Persistence.Definitions" version="1.0.3" />
+      <dependency id="Psns.Common.Persistence.Definitions" version="1.0.5" />
       <dependency id="EntityFramework" version="6.1.3" />
     </dependencies>
   </metadata>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Psns.Common.Test.BehaviorDrivenDevelopment;
@@ -8,7 +9,6 @@ using Psns.Common.Persistence.EntityFramework;
 using Psns.Common.Persistence.Definitions;
 
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.ComponentModel.DataAnnotations;
 
 using Moq;
@@ -76,7 +76,7 @@ namespace EntityFramework.UnitTests
     [TestClass]
     public class AndGettingAll : WhenWorkingWithTheRepository
     {
-        IEnumerable<TestEntity> _all;
+        IQueryable<TestEntity> _all;
 
         public override void Arrange()
         {
@@ -149,6 +149,25 @@ namespace EntityFramework.UnitTests
         public void ThenTheFoundEntityShouldBeReturned()
         {
             Assert.AreEqual(1, _found.Id);
+        }
+    }
+
+    [TestClass]
+    public class AndFindingAsync : WhenWorkingWithTheRepository
+    {
+        public override void Arrange()
+        {
+            base.Arrange();
+
+            MockTestEntitySet.Setup(s => s.FindAsync(It.IsAny<object[]>())).Returns(Task.FromResult(new TestEntity { Id = 1 }));
+        }
+
+        [TestMethod]
+        public async void ThenTheFoundEntityShouldBeReturned()
+        {
+            var found = await Repository.FindAsync(1);
+
+            Assert.AreEqual(1, found.Id);
         }
     }
 
@@ -440,6 +459,23 @@ namespace EntityFramework.UnitTests
         public void ThenSaveChangesShouldBeCalled()
         {
             MockContext.Verify(c => c.SaveChanges(), Times.Once());
+        }
+    }
+
+    [TestClass]
+    public class AndSavingChangesAsync : WhenWorkingWithTheRepository
+    {
+        public override void Act()
+        {
+            base.Act();
+
+            Repository.SaveChangesAsync().Wait();
+        }
+
+        [TestMethod]
+        public void ThenSaveChangesAsyncShouldBeCalled()
+        {
+            MockContext.Verify(c => c.SaveChangesAsync(), Times.Once());
         }
     }
 
